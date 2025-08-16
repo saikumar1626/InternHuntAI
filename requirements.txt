@@ -1,0 +1,9 @@
+playwright==1.47.0
+pyyaml==6.0.2
+requests==2.31.0
+beautifulsoup4==4.12.3
+lxml==5.2.2
+aiohttp==3.9.5
+asyncio==3.4.3
+loguru==0.7.2
+tenacity==8.3.0
