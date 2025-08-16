@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+applied_log.json
+playwright_storage.json
+agent_config.yaml
+*.log
