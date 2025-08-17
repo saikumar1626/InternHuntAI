@@ -1,0 +1,26 @@
+application:
+  phone_number: '9701263938'
+  resumes:
+    data_science: /mnt/data/PAVAN SUBRAMANYAM SAI KUMAR DANGEI-DS.pdf
+    software_engineering: /mnt/data/PAVAN SUBRAMANYAM SAI KUMAR DANGETI-SE.pdf
+  skip_long_forms: true
+  submit_without_review: true
+job_search:
+  experience_level: Internship
+  keywords:
+  - Data Science Internship
+  location: Bengaluru
+  remote_only: false
+login:
+  email: pavansai97012@gmail.com
+  password: 5?Z4X8DB&f^dZnL
+  platform: LinkedIn
+notifications:
+  notify_for_normal_apply: true
+  pushbullet_api_key: ''
+runtime:
+  refresh_interval_minutes: 5
+server:
+  api_token: l4yr1jX6c21-4GUx9RIuVktUJk5W2JlI
+  host: 0.0.0.0
+  port: 5000

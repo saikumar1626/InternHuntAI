@@ -2,8 +2,10 @@ import time
 import os
 import json
 import yaml
+import threading
 from loguru import logger
 from playwright.sync_api import sync_playwright
+from flask import Flask, jsonify
 
 # === LOAD CONFIG ===
 with open("agent_config.yaml", "r") as f:
@@ -15,7 +17,9 @@ PHONE = cfg["application"]["phone_number"]
 RESUME_DS = os.path.abspath(cfg["application"]["resumes"]["data_science"])
 RESUME_SE = os.path.abspath(cfg["application"]["resumes"]["software_engineering"])
 
-# === CAPTCHA DETECTION (wait forever + flashing) ===
+app = Flask(__name__)
+
+# === CAPTCHA DETECTION ===
 def detect_captcha(page):
     if "captcha" in page.content().lower():
         logger.warning("CAPTCHA detected! Please solve it manually in the opened browser.")
@@ -30,7 +34,7 @@ def detect_captcha(page):
         time.sleep(2)
     logger.info("CAPTCHA cleared, resuming automation...")
 
-# === LOGIN TO LINKEDIN ===
+# === LOGIN ===
 def linkedin_login(page):
     logger.info("Navigating to LinkedIn login page...")
     page.goto("https://www.linkedin.com/login", timeout=0)
@@ -42,7 +46,7 @@ def linkedin_login(page):
     page.wait_for_load_state("domcontentloaded")
     logger.info("Login successful.")
 
-# === DETERMINE WHICH RESUME TO USE ===
+# === RESUME SELECTION ===
 def select_resume(job_title):
     job_title_lower = job_title.lower()
     if "data" in job_title_lower or "ml" in job_title_lower or "ai" in job_title_lower:
@@ -105,10 +109,9 @@ def load_applied_log():
         logger.warning("applied_log.json is empty or corrupted — resetting.")
         return [], applied_log_path
 
-# === MAIN ===
-def main():
+# === BOT RUNNER ===
+def run_bot():
     applied_log, applied_log_path = load_applied_log()
-
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         context = browser.new_context()
@@ -138,5 +141,21 @@ def main():
         logger.info("All done.")
         browser.close()
 
+# === FLASK ENDPOINTS ===
+@app.route("/")
+def home():
+    return "✅ Job Agent is running!"
+
+@app.route("/start", methods=["POST"])
+def start():
+    threading.Thread(target=run_bot).start()
+    return jsonify({"status": "Job bot started"})
+
+@app.route("/status", methods=["GET"])
+def status():
+    applied_log, _ = load_applied_log()
+    return jsonify({"applied_jobs": applied_log})
+
+# === MAIN ===
 if __name__ == "__main__":
-    main()
+    app.run(host="0.0.0.0", port=5000)
