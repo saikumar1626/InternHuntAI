@@ -3,20 +3,20 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.sqlite3
 
 # Virtual environment
 venv/
 autoapply/venv/
 
-# Logs
+# Logs & configs
 *.log
 applied_log.json
+agent_config.yaml   # <- keep your LinkedIn email & password private!
 
 # IDE
 .vscode/
 .idea/
 
-# OS
+# OS files
 .DS_Store
 Thumbs.db
